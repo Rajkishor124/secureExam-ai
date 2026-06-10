@@ -21,3 +21,17 @@ export const loginUser = async (userData) => {
 
   return response.data;
 };
+
+
+// LOGOUT
+export const logoutUser = async () => {
+  const response = await API.post("/auth/logout");
+  return response.data;
+};
+
+
+// GET CURRENT USER (verify token)
+export const getCurrentUser = async () => {
+  const response = await API.get("/auth/me");
+  return response.data;
+};

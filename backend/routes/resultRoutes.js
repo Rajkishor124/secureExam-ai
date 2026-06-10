@@ -3,6 +3,8 @@ const express = require("express");
 const {
   getAllResults,
   getResultsByExam,
+  getMyResults,
+  getResultById,
 } = require("../controllers/resultController");
 
 const {
@@ -12,6 +14,23 @@ const {
 
 const router = express.Router();
 
+
+// STUDENT: Get my results
+router.get(
+  "/my",
+  protect,
+  getMyResults
+);
+
+// STUDENT: Get single result by ID
+router.get(
+  "/:id",
+  protect,
+  getResultById
+);
+
+
+// ADMIN: Get all results
 router.get(
   "/",
   protect,

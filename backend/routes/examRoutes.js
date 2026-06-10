@@ -3,6 +3,7 @@ const express = require("express");
 const {
   createExam,
   getExams,
+  getExamById,
   addQuestion,
   getQuestionsByExam,
   submitExam,
@@ -32,6 +33,14 @@ router.get(
   "/all",
   protect,
   getExams
+);
+
+
+// GET EXAM BY ID
+router.get(
+  "/details/:id",
+  protect,
+  getExamById
 );
 
 

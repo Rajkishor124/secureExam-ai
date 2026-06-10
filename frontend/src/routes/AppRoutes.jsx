@@ -1,10 +1,15 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "../context/AuthContext";
 
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import StudentDashboard from "../pages/StudentDashboard";
 import ExamPage from "../pages/ExamPage";
+import ExamsPage from "../pages/ExamsPage";
+import ResultPage from "../pages/ResultPage";
+import ExamResultPage from "../pages/ExamResultPage";
+import ProfilePage from "../pages/ProfilePage";
 import AdminDashboard from "../pages/AdminDashboard";
 import CreateExam from "../pages/CreateExam";
 import AddQuestion from "../pages/AddQuestion";
@@ -15,67 +20,108 @@ import ProtectedRoute from "./ProtectedRoute";
 function AppRoutes() {
   return (
     <BrowserRouter>
-      <Routes>
+      <AuthProvider>
+        <Routes>
 
-        <Route path="/" element={<Home />} />
+          {/* Public Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-        <Route path="/login" element={<Login />} />
+          {/* Student Routes */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute allowedRoles={["student"]}>
+                <StudentDashboard />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route path="/register" element={<Register />} />
+          <Route
+            path="/exams"
+            element={
+              <ProtectedRoute allowedRoles={["student"]}>
+                <ExamsPage />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <StudentDashboard />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/exam/:examId"
+            element={
+              <ProtectedRoute allowedRoles={["student"]}>
+                <ExamPage />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/exam/:examId"
-          element={
-            <ProtectedRoute>
-              <ExamPage />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/results"
+            element={
+              <ProtectedRoute allowedRoles={["student"]}>
+                <ResultPage />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/result/:resultId"
+            element={
+              <ProtectedRoute allowedRoles={["student"]}>
+                <ExamResultPage />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/create-exam"
-          element={
-            <ProtectedRoute>
-              <CreateExam />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/add-question"
-          element={
-            <ProtectedRoute>
-              <AddQuestion />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/results"
-          element={
-            <ProtectedRoute>
-              <ResultsPage />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+          {/* Admin Routes */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/create-exam"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <CreateExam />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/add-question"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AddQuestion />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/results"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <ResultsPage />
+              </ProtectedRoute>
+            }
+          />
+
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

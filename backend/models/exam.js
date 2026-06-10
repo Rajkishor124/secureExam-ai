@@ -21,6 +21,18 @@ const examSchema = new mongoose.Schema(
       default: 0,
     },
 
+    allowReattempt: {
+      type: Boolean,
+      default: false,
+    },
+
+    maxAttempts: {
+      type: Number,
+      default: 1,
+      min: 1,
+      max: 3,
+    },
+
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

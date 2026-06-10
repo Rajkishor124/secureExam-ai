@@ -2,15 +2,15 @@ import { useEffect, useState, useCallback } from "react";
 
 import { getAllExams } from "../services/examService";
 
-import AdminSidebar from "../components/admin/AdminSidebar";
+import AdminSidebar, { MobileMenuButton } from "../components/admin/AdminSidebar";
 import AdminBanner from "../components/admin/AdminBanner";
 import AdminStatCard from "../components/admin/AdminStatCard";
 import QuickActions from "../components/admin/QuickActions";
 import ExamManagementTable from "../components/admin/ExamManagementTable";
-import {getAdminStats} from "../services/adminService";
+import { getAdminStats } from "../services/adminService";
 
 function AdminDashboard() {
-
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [exams, setExams] = useState([]);
   const [stats, setStats] = useState({
     totalExams: 0,
@@ -42,70 +42,48 @@ function AdminDashboard() {
       await fetchExams();
       await fetchStats();
     };
-
     loadDashboardData();
   }, [fetchExams, fetchStats]);
 
-
   return (
-    <div className="
-      flex
-      bg-slate-900
-      text-white
-    ">
+    <div className="flex min-h-screen bg-gray-50 text-gray-900">
+      <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <AdminSidebar />
-
-      <div className="
-        flex-1
-        p-8
-      ">
-
-        <AdminBanner />
-
-        <div className="
-          grid
-          md:grid-cols-4
-          gap-6
-          mb-10
-        ">
-
-          <AdminStatCard
-            title="Total Exams"
-            value={stats.totalExams}
-          />
-
-          <AdminStatCard
-            title="Questions"
-            value={stats.totalQuestions}
-          />
-
-          <AdminStatCard
-            title="Students"
-            value={stats.totalStudents}
-          />
-
-          <AdminStatCard
-            title="Attempts"
-            value={stats.totalAttempts}
-          />
-
+      <div className="flex-1 lg:ml-72">
+        {/* Top Bar */}
+        <div className="bg-white border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center gap-3">
+            <MobileMenuButton onClick={() => setSidebarOpen(true)} />
+            <h1 className="text-xl font-bold tracking-tight text-gray-900">Admin Dashboard</h1>
+            <span className="bg-blue-100 text-blue-800 text-xs px-2.5 py-0.5 rounded-full font-medium">
+              Admin
+            </span>
+          </div>
         </div>
 
-        <QuickActions />
+        {/* Content */}
+        <div className="p-4 sm:p-6 lg:p-8">
+          <AdminBanner />
 
-        <h2 className=" text-3xl font-bold mb-6">
-          Exam Management
-        </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+            <AdminStatCard title="Total Exams" value={stats.totalExams} />
+            <AdminStatCard title="Questions" value={stats.totalQuestions} />
+            <AdminStatCard title="Students" value={stats.totalStudents} />
+            <AdminStatCard title="Attempts" value={stats.totalAttempts} />
+          </div>
 
-        <ExamManagementTable
-          exams={exams}
-          refreshExams={fetchExams}
-        />
+          <QuickActions />
 
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold text-gray-900">Exam Management</h2>
+            <span className="text-sm text-gray-500">{exams.length} exams total</span>
+          </div>
+
+          <ExamManagementTable exams={exams} refreshExams={fetchExams} />
+        </div>
       </div>
-
     </div>
   );
 }
+
 export default AdminDashboard;
